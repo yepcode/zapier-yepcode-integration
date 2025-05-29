@@ -39,7 +39,7 @@ describe("Authentication", () => {
           const parsedMessage = JSON.parse(err.message);
           assert.strictEqual(parsedMessage.code, "AuthenticationError");
           assert.strictEqual(parsedMessage.status, 401);
-          assert.ok(parsedMessage.message.includes("Invalid apiToken"));
+          assert.ok(parsedMessage.message.includes("Invalid API Token"));
           return true;
         }
       );
@@ -49,7 +49,7 @@ describe("Authentication", () => {
       const bundle = {
         authData: {
           apiToken: process.env.authData_apiToken,
-          apiHost: "invalid",
+          apiHost: "https://invalid",
         },
       };
 
@@ -62,7 +62,7 @@ describe("Authentication", () => {
           const parsedMessage = JSON.parse(err.message);
           assert.strictEqual(parsedMessage.code, "AuthenticationError");
           assert.strictEqual(parsedMessage.status, 401);
-          assert.ok(parsedMessage.message.includes("Failed to parse URL"));
+          assert.ok(parsedMessage.message.includes("Invalid API Host"));
           return true;
         }
       );

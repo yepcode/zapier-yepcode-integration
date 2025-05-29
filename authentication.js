@@ -1,16 +1,28 @@
-const { YepCodeApi } = require("@yepcode/run");
-
 const testAuth = async (z, bundle) => {
-  try {
-    const api = new YepCodeApi({
-      apiToken: bundle.authData.apiToken,
-      apiHost: bundle.authData.apiHost || "https://cloud.yepcode.io",
+  const apiHost = bundle.authData.apiHost || "https://cloud.yepcode.io";
+  const options = {
+    url: `${apiHost}/run/whoami`,
+    headers: {
+      "x-api-token": bundle.authData.apiToken,
+    },
+  };
+
+  return z
+    .request(options)
+    .then((response) => {
+      response.throwForStatus();
+      return response.data;
+    })
+    .catch((error) => {
+      if (error.message.includes("Invalid API token")) {
+        throw new z.errors.Error(
+          "Invalid API Token",
+          "AuthenticationError",
+          401
+        );
+      }
+      throw new z.errors.Error("Invalid API Host", "AuthenticationError", 401);
     });
-    await api.getProcesses({ limit: 1 });
-    return api;
-  } catch (error) {
-    throw new z.errors.Error(error.message, "AuthenticationError", 401);
-  }
 };
 
 module.exports = {
