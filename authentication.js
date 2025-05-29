@@ -1,51 +1,53 @@
-const graphqlQueries = require("./lib/graphql_queries");
-const graphqlClient = require("./lib/graphql_client");
-
 const testAuth = async (z, bundle) => {
-  return graphqlClient.graphqlQuery(z, {
-    accessToken: bundle.authData.accessToken,
-    query: graphqlQueries.getTeams(),
-    responseCb: (response) => {
-      return response.json.data;
+  const apiHost = bundle.authData.apiHost || "https://cloud.yepcode.io";
+  const options = {
+    url: `${apiHost}/run/whoami`,
+    headers: {
+      "x-api-token": bundle.authData.apiToken,
     },
-  });
+  };
+
+  return z
+    .request(options)
+    .then((response) => {
+      response.throwForStatus();
+      return response.data;
+    })
+    .catch((error) => {
+      if (error.message.includes("Invalid API token")) {
+        throw new z.errors.Error(
+          "Invalid API Token",
+          "AuthenticationError",
+          401
+        );
+      }
+      throw new z.errors.Error("Invalid API Host", "AuthenticationError", 401);
+    });
 };
 
 module.exports = {
-  type: "session",
+  type: "custom",
   test: testAuth,
   fields: [
     {
       computed: false,
-      key: "email",
+      key: "apiToken",
       required: true,
-      label: "email",
-      type: "string",
-      helpText: "[YepCode account](https://cloud.yepcode.io/) email",
-    },
-    {
-      computed: false,
-      key: "password",
-      required: true,
-      label: "password",
+      label: "API Token",
       type: "password",
-      helpText: "YepCode account password",
+      helpText:
+        "Find your API Token in the YepCode dashboard under the 'Settings -> API Credentials' section.",
     },
     {
       computed: false,
-      key: "team",
-      required: true,
-      label: "team",
+      key: "apiHost",
+      required: false,
+      label: "API Host",
       type: "string",
-      helpText: "[YepCode account](https://cloud.yepcode.io/) team identifier",
-      inputFormat: "https://cloud.yepcode.io/{{input}}",
+      helpText:
+        "The YepCode API host to use (default: https://cloud.yepcode.io). It can be customized for YepCode On-Premise instances.",
+      default: "https://cloud.yepcode.io",
     },
   ],
-  connectionLabel: "{{email}} at {{team}}",
-  sessionConfig: {
-    perform: {
-      source:
-        "const options = {\n  url: 'https://cloud.yepcode.io/auth/realms/yepcode/protocol/openid-connect/token',\n  method: 'POST',\n  headers: {\n    'content-type': 'application/x-www-form-urlencoded',\n    'accept': 'application/json'\n  },\n  params: {\n\n  },\n  body: {\n    'client_id': 'web-client',\n\t\t'grant_type': 'password',\n    'username': bundle.authData.email,\n    'password': bundle.authData.password\n  }\n}\n\nreturn z.request(options)\n  .then((response) => {\n    response.throwForStatus();\n    const results = response.json;\n\n    // You can do any parsing you need for results here before returning them\n\n    return {\n      'accessToken': results.access_token\n    };\n  });",
-    },
-  },
+  connectionLabel: "Connected to YepCode",
 };
