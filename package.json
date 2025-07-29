@@ -1,6 +1,6 @@
 {
   "name": "yep-code",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Bring real code to your workflows. YepCode lets you run full processes or quick dynamic scripts using Node.js or Python, with support for any NPM or PyPI dependency. All in a secure, serverless environment — no ops, just execution.",
   "main": "index.js",
   "scripts": {
