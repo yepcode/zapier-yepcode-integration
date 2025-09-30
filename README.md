@@ -2,7 +2,7 @@
 
 # zapier-yepcode-integration
 
-This is a [Zapier](https://zapier.com) integration that lets you use [YepCode](https://yepcode.io) in your Zapier workflows.
+This is a [Zapier](https://zapier.com) integration that lets you use [YepCode](https://yepcode.io/l/k3rH1) in your Zapier workflows.
 
 Easily execute AI-generated code in a secure, scalable environment with full support for dependencies, secrets, logs, and access to APIs or databases—all on a developer-first platform designed to create any integration or automation without DevOps complexity.
 
@@ -20,7 +20,7 @@ Easily execute AI-generated code in a secure, scalable environment with full sup
 
 Authentication is required to use this integration. You'll need your YepCode API token, which you can find in your YepCode workspace under `Settings > API credentials`. For YepCode On-Premise, you may also specify a custom API host.
 
-1. Sign up for [YepCode Cloud](https://cloud.yepcode.io).
+1. Sign up for [YepCode Cloud](https://yepcode.io/l/k3rH1).
 2. Get your API token from `Settings > API credentials` in your YepCode workspace.
 3. Create your Zapier connection with YepCode using this token.
 4. (Optional) Enter a custom API host if using YepCode On-Premise.
